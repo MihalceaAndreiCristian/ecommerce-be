@@ -1,0 +1,23 @@
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: strict
+
+
+spring:
+  datasource:
+    username: flywayuser
+    password: jozey
+    url: jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce
+    driver-class-name: org.postgresql.Driver
+  application:
+    name: ecommerce-app
+  security:
+    user:
+      name: admin
+      password: 1234
+  flyway: 
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
