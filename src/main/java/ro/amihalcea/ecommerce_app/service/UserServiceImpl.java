@@ -5,22 +5,21 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.amihalcea.ecommerce_app.dto.UserDTO;
-
 import ro.amihalcea.ecommerce_app.mapper.UserMapper;
 import ro.amihalcea.ecommerce_app.model.User;
 import ro.amihalcea.ecommerce_app.repository.UserRepository;
+import ro.amihalcea.ecommerce_app.service.user.UserService;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserService {
+public class UserServiceImpl implements UserService {
 
 
     private final UserRepository repo;
@@ -28,14 +27,14 @@ public class UserService {
     private final UserMapper mapper;
 
     @Autowired
-    public UserService(UserRepository repo,
-                       PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository repo,
+                           PasswordEncoder passwordEncoder) {
         this.repo = repo;
         this.passwordEncoder = passwordEncoder;
         this.mapper = Mappers.getMapper(UserMapper.class);
 
     }
-
+    @Override
     @Transactional
     public UserDTO registerUser(UserDTO dto) {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
@@ -50,7 +49,7 @@ public class UserService {
         }
         throw new RuntimeException("User already exists.");
     }
-
+    @Override
     @Transactional
     public void updateUser(UserDTO dto,
                            int id) {
@@ -68,6 +67,7 @@ public class UserService {
                 });
     }
 
+    @Override
     @Transactional
     public UserDTO getUser(String username,
                            Integer id) {
@@ -89,7 +89,7 @@ public class UserService {
         throw new RuntimeException(String.format("User not present."));
     }
 
-
+@Override
     public List<UserDTO> getAllUsers() {
         return repo
                 .findAll()

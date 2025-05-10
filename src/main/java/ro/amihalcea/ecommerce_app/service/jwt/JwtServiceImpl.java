@@ -1,4 +1,4 @@
-package ro.amihalcea.ecommerce_app.service;
+package ro.amihalcea.ecommerce_app.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,12 +19,12 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtService {
+public class JwtServiceImpl implements JwtService {
 
 
     private String secretKey;
 
-    public JwtService() {
+    public JwtServiceImpl() {
         this.secretKey = generateSecretKey();
     }
 

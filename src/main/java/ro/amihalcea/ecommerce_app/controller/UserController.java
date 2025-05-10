@@ -2,17 +2,12 @@ package ro.amihalcea.ecommerce_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ro.amihalcea.ecommerce_app.dto.LoginDTO;
 import ro.amihalcea.ecommerce_app.dto.UserDTO;
-import ro.amihalcea.ecommerce_app.service.JwtService;
-import ro.amihalcea.ecommerce_app.service.UserService;
+import ro.amihalcea.ecommerce_app.service.user.UserService;
+import ro.amihalcea.ecommerce_app.service.jwt.JwtService;
 
 import java.util.List;
 
@@ -38,22 +33,7 @@ public class UserController {
         return service.registerUser(user);
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-//        Authentication authentication =
-//                manager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
-//        if (authentication.isAuthenticated()) {
-//
-//            String token = jwtService.generateToken(loginDTO.getUsername());
-//            return ResponseEntity
-//                    .ok()
-//                    .header("Authorization", token)
-//                    .build();
-//        }
-//        return ResponseEntity
-//                .status(HttpStatusCode.valueOf(401))
-//                .build();
-//    }
+
 
     @PatchMapping("/users/user/update/{id}")
     public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,
