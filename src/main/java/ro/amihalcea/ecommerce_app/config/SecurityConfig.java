@@ -72,9 +72,11 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex
                         .accessDeniedHandler((request, response, accessDeniedException) -> {
                             response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403
+                            response.getWriter().write("Access forbidden. Request not allowed.");
                         })
                         .authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+                            response.getWriter().write("Unauthorized. Bad Credentials.");
                         })
                 )
                 .httpBasic(Customizer.withDefaults())
