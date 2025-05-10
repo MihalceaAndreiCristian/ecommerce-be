@@ -38,22 +38,22 @@ public class UserController {
         return service.registerUser(user);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
-        Authentication authentication =
-                manager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
-        if (authentication.isAuthenticated()) {
-
-            String token = jwtService.generateToken(loginDTO.getUsername());
-            return ResponseEntity
-                    .ok()
-                    .header("Authorization", token)
-                    .build();
-        }
-        return ResponseEntity
-                .status(HttpStatusCode.valueOf(401))
-                .build();
-    }
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+//        Authentication authentication =
+//                manager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
+//        if (authentication.isAuthenticated()) {
+//
+//            String token = jwtService.generateToken(loginDTO.getUsername());
+//            return ResponseEntity
+//                    .ok()
+//                    .header("Authorization", token)
+//                    .build();
+//        }
+//        return ResponseEntity
+//                .status(HttpStatusCode.valueOf(401))
+//                .build();
+//    }
 
     @PatchMapping("/users/user/update/{id}")
     public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,
