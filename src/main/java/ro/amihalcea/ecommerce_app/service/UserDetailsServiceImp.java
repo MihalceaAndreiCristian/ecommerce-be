@@ -10,6 +10,8 @@ import ro.amihalcea.ecommerce_app.model.User;
 import ro.amihalcea.ecommerce_app.model.UserPrincipal;
 import ro.amihalcea.ecommerce_app.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 public class UserDetailsServiceImp implements UserDetailsService {
@@ -24,13 +26,13 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
-        User user = userRepository.findByUsername(username);
-        if (user== null){
+        Optional<User> userOpt = userRepository.findByUsername(username);
+        if (userOpt.isEmpty()){
             log.warn("User not found by username '{}'",username);
             throw new UsernameNotFoundException("User not found.");
         }
 
+        User user = userOpt.get();
         log.info("User with id {} found.\n",user.getId());
 
         return new UserPrincipal(user);

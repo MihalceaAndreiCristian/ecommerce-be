@@ -33,7 +33,6 @@ public class JwtService {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
 
             SecretKey secretKey1 = keyGen.generateKey();
-            System.out.println("Secret key : " + secretKey1);
             return Base64.getEncoder().encodeToString(secretKey1.getEncoded());
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error geneating secret key\n %s", e);
@@ -70,7 +69,8 @@ public class JwtService {
     private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
-                .build().parseClaimsJws(token)
+                .build()
+                .parseClaimsJws(token)
                 .getBody();
     }
 
@@ -86,4 +86,5 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token,Claims::getExpiration);
     }
+
 }

@@ -8,12 +8,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 import ro.amihalcea.ecommerce_app.model.User;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     @Query(value = "SELECT * FROM ecommerce.users AS u WHERE u.username= :username OR u.email= :email", nativeQuery = true)
-    User findByUsernameOrEmail(@Param("username") String username,@Param("email") String email);
+    Optional<User> findByUsernameOrEmail(@Param("username") String username,@Param("email") String email);
 
 }
