@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,14 +44,14 @@ public class SecurityConfig {
         this.jwtService = jwtService;
     }
 
-//    @Bean
-//    public AuthenticationProvider authProvider() {
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-//
-//        provider.setUserDetailsService(userDetailsService);
-//        provider.setPasswordEncoder(passwordEncoder());
-//        return provider;
-//    }
+    @Bean
+    public AuthenticationProvider authProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -77,8 +79,7 @@ public class SecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilter(new AuthenticationFilter(manager(http,passwordEncoder(),userDetailsService),jwtService ,
-                        mapper()))
+                .addFilter(new AuthenticationFilter(authProvider(), jwtService, mapper()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -99,13 +100,14 @@ public class SecurityConfig {
                 .registerModule(new JavaTimeModule());
     }
 
-    @Bean
-    public AuthenticationManager manager(HttpSecurity http, PasswordEncoder passwordEncoder,
-                                         UserDetailsService userDetailService) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                .and()
-                .build();
-    }}
+//    @Bean
+//    public AuthenticationManager manager(HttpSecurity http, PasswordEncoder passwordEncoder,
+//                                         UserDetailsService userDetailService) throws Exception {
+//        return http.getSharedObject(AuthenticationManagerBuilder.class)
+//                .userDetailsService(userDetailsService)
+//                .passwordEncoder(passwordEncoder)
+//                .and()
+//                .build();
+//    }
+}
 

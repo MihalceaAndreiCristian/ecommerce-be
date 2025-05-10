@@ -16,16 +16,10 @@ public class UserController {
 
 
     private final UserService service;
-    private final AuthenticationManager manager;
-    private final JwtService jwtService;
 
     @Autowired
-    public UserController(UserService service,
-                          AuthenticationManager manager,
-                          JwtService jwtService) {
+    public UserController(UserService service) {
         this.service = service;
-        this.manager = manager;
-        this.jwtService = jwtService;
     }
 
     @PostMapping("/users/register")
