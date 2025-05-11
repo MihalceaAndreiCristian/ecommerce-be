@@ -33,7 +33,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         }
 
         User user = userOpt.get();
-        log.info("User with id {} found.\n",user.getId());
+        log.info("User with id '{}' found.\n",user.getId());
 
         return new UserPrincipal(user);
     }

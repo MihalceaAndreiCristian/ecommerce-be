@@ -22,3 +22,8 @@ spring:
     baseline-on-migrate: true
     baseline-version: 1
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
