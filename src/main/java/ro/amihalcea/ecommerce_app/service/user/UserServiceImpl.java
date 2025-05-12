@@ -1,4 +1,4 @@
-package ro.amihalcea.ecommerce_app.service;
+package ro.amihalcea.ecommerce_app.service.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.factory.Mappers;
@@ -12,7 +12,6 @@ import ro.amihalcea.ecommerce_app.dto.UserDTO;
 import ro.amihalcea.ecommerce_app.mapper.UserMapper;
 import ro.amihalcea.ecommerce_app.model.User;
 import ro.amihalcea.ecommerce_app.repository.UserRepository;
-import ro.amihalcea.ecommerce_app.service.user.UserService;
 
 import java.util.List;
 import java.util.Optional;

@@ -28,11 +28,11 @@ public class Product {
     @Column(name = "description")
     private String description;
     @Column(name = "price")
-    private double price;
+    private Double price;
     @Column(name = "created_at")
     private Timestamp createdAt;
     @Column(name = "last_update")
     private Timestamp lastUpdate;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "product")
-    private List<Photo> photosKeys;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
+    private List<Photo> photos;
 }

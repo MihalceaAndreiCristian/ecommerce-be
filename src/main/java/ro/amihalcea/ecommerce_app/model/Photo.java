@@ -24,7 +24,10 @@ public class Photo {
     private byte[] content;
     @Column(name = "extension")
     private String extension;
+    @Column(name = "is_main_photo")
+    private Boolean isMainPhoto;
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
 }
