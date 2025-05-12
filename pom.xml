@@ -10,7 +10,7 @@
     </parent>
     <groupId>ro.amihalcea</groupId>
     <artifactId>ecommerce-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>ecommerce-app</name>
     <description>Backend server for ecommerce App</description>
     <url/>
@@ -115,6 +115,7 @@
                 <configuration>
                     <source>1.17</source>
                     <target>1.17</target>
+                    <outputFileName>ecommerce-app</outputFileName>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>

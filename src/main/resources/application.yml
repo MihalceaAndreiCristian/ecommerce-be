@@ -9,7 +9,7 @@ spring:
   datasource:
     username: flywayuser
     password: jozey
-    url: jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce
+    url: jdbc:postgresql://postgres:5432/ecommerce?currentSchema=ecommerce
     driver-class-name: org.postgresql.Driver
   application:
     name: ecommerce-app

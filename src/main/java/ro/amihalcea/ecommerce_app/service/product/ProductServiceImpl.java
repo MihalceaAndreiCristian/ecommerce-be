@@ -90,8 +90,9 @@ public class ProductServiceImpl implements ProductService {
         productFromDbDTO.setName(updateStringOrDismiss(newData.getName(), productFromDbDTO.getName()));
         productFromDbDTO.setDescription(updateStringOrDismiss(newData.getDescription(), productFromDbDTO.getDescription()));
         productFromDbDTO.setPhotos(validateProductPhotos(newData, productFromDbDTO));
-        var productUpdated = mapper.mapFromDTO(productFromDbDTO);
 
+        var productUpdated = mapper.mapFromDTO(productFromDbDTO);
+        // save updated photos too
         repository.save(productUpdated);
 
 
