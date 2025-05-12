@@ -1,5 +1,6 @@
 package ro.amihalcea.ecommerce_app.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,9 @@ public class ProductDTO {
     private String name;
     private String description;
     private Double price;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private Timestamp createdAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
     private Timestamp lastUpdate;
     private PhotoDTO mainPhoto;
     private List<PhotoDTO> photos;

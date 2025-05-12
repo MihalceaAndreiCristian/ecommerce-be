@@ -23,6 +23,9 @@ public abstract class ProductMapper {
     public abstract ProductDTO mapFromModel(Product product);
 
     protected PhotoDTO getMainPhoto(Product product) {
+        if (product.getPhotos() == null || product.getPhotos().isEmpty()){
+            return null;
+        }
         Photo photo = product
                 .getPhotos()
                 .stream()
@@ -34,6 +37,9 @@ public abstract class ProductMapper {
     }
 
     protected List<Photo> transformPhotosToModel(ProductDTO dto) {
+        if (dto.getPhotos() == null || dto.getPhotos().isEmpty()){
+            return null;
+        }
         return dto
                 .getPhotos()
                 .stream()
@@ -42,6 +48,9 @@ public abstract class ProductMapper {
     }
 
     protected List<PhotoDTO> transformPhotosToDTOs(Product product) {
+        if (product.getPhotos() == null || product.getPhotos().isEmpty()){
+            return null;
+        }
         return product
                 .getPhotos()
                 .stream()

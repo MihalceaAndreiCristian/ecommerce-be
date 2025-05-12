@@ -13,6 +13,7 @@ import ro.amihalcea.ecommerce_app.service.product.photo.PhotoService;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
@@ -60,6 +61,11 @@ public class ProductServiceImpl implements ProductService {
         var photos = productToBeAdded.getPhotos();
         var productToSave = mapper.mapFromDTO(productToBeAdded);
         var productSaved = repository.save(productToSave);
+
+        if (photos == null){
+            return mapper.mapFromModel(productSaved);
+        }
+
         photos = photos.stream()
                 .map(photo -> {
                     photo.setProductId(productSaved.getId());
@@ -74,6 +80,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDTO updateProduct(ProductDTO newData,
                                     int productId) {
         var productFromDbDTO = getProduct(productId);
