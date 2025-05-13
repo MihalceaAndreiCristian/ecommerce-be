@@ -18,10 +18,11 @@ import ro.amihalcea.ecommerce_app.service.UserDetailsServiceImp;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    public static final String AUTHORIZATION = "Authorization";
     public static final String BEARER = "Bearer ";
     private final JwtService jwtService;
     private final ApplicationContext applicationContext;
@@ -38,30 +39,32 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        String token = null;
-        String username = null;
+        if (!request.getRequestURI().contains("login")) {
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+            String token = null;
+            String username = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith(BEARER)) {
-            token = authorizationHeader.split(" ")[1];
-            username = jwtService.extractUsername(token);
-        }
+            if (authorizationHeader != null && authorizationHeader.startsWith(BEARER)) {
+                token = authorizationHeader.split(" ")[1];
+                username = jwtService.extractUsername(token);
+            }
 
-        if (username != null && SecurityContextHolder
-                .getContext()
-                .getAuthentication() == null) {
-            UserDetails userDetails =
-                    applicationContext
-                            .getBean(UserDetailsServiceImp.class)
-                            .loadUserByUsername(username);
+            if (username != null && SecurityContextHolder
+                    .getContext()
+                    .getAuthentication() == null) {
+                UserDetails userDetails =
+                        applicationContext
+                                .getBean(UserDetailsServiceImp.class)
+                                .loadUserByUsername(username);
 
-            if (jwtService.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder
-                        .getContext()
-                        .setAuthentication(authToken);
+                if (jwtService.validateToken(token, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+                            null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder
+                            .getContext()
+                            .setAuthentication(authToken);
+                }
             }
         }
         filterChain.doFilter(request, response);

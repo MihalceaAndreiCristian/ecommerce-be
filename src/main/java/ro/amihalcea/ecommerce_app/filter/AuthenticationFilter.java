@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,13 +15,14 @@ import ro.amihalcea.ecommerce_app.service.jwt.JwtService;
 
 import java.io.IOException;
 
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationProvider authenticationProvider;
     private final JwtService jwtService;
     private final ObjectMapper mapper;
-    private static final String AUTHORIZATION = "Authorization";
 
 
     public AuthenticationFilter(AuthenticationProvider authenticationProvider, JwtService jwtService, ObjectMapper mapper) {
@@ -74,6 +74,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtService.generateToken(((UserPrincipal) authResult.getPrincipal()).getUsername());
         response.addHeader(AUTHORIZATION, token);
         response.setHeader(AUTHORIZATION, token);
-
+        response.setHeader("Access-Control-Allow-Origin","*");
+        response.setHeader("Access-Control-Allow-Methods","GET, POST, PUT, DELETE, OPTIONS");
+        response.setHeader("Access-Control-Max-Age","3600");
+        response.addHeader("Access-Control-Allow-Headers",
+                "X-PINGOTHER, Content-Type, X-Requested-With, accept*,Origin, Access-Control-Request-Nethod, Access-Control-Request-Headers, Authorization");
+        response.addHeader("Access-Control-Expose-Headers",AUTHORIZATION);
     }
 }

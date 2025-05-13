@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: flywayuser
+    password: jozey
+    url: jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce
+
+server:
+  port: 3000
+
+cors:
+  allow: http://localhost:4200
+
+  logging:
+    level:
+      org:
+        springframework:
+          web: DEBUG
