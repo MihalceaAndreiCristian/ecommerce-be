@@ -10,17 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDTO {
-    private int id;
-    private String username;
+public class UserDTO extends UserDTOUpdate{
     private String password;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String role;
 
-
-    public static UserDTO updateUserData(UserDTO receivedFromRequest,UserDTO receivedFromDB){
+    public static UserDTO updateUserData(UserDTOUpdate receivedFromRequest,UserDTO receivedFromDB){
         receivedFromDB.setEmail(receivedFromRequest.getEmail());
         receivedFromDB.setFirstName(receivedFromRequest.getFirstName());
         receivedFromDB.setLastName(receivedFromRequest.getLastName());

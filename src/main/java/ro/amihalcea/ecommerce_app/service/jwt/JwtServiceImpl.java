@@ -5,8 +5,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ro.amihalcea.ecommerce_app.dto.UserDTO;
+import ro.amihalcea.ecommerce_app.service.user.UserService;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -24,6 +27,7 @@ public class JwtServiceImpl implements JwtService {
 
     private String secretKey;
 
+    @Autowired
     public JwtServiceImpl() {
         this.secretKey = generateSecretKey();
     }
@@ -40,7 +44,6 @@ public class JwtServiceImpl implements JwtService {
     }
 
     public String generateToken(String username) {
-
         Map<String, Object> claim = new HashMap<>();
 
         return Jwts.builder()

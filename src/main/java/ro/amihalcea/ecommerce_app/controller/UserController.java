@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ro.amihalcea.ecommerce_app.dto.UserDTO;
+import ro.amihalcea.ecommerce_app.dto.UserDTOUpdate;
 import ro.amihalcea.ecommerce_app.service.user.UserService;
 import ro.amihalcea.ecommerce_app.service.jwt.JwtService;
 
@@ -16,21 +18,26 @@ public class UserController {
 
 
     private final UserService service;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Autowired
-    public UserController(UserService service) {
+    public UserController(UserService service,
+                          PasswordEncoder passwordEncoder) {
         this.service = service;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/users/register")
     public UserDTO register(@RequestBody UserDTO user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return service.registerUser(user);
     }
 
 
 
     @PatchMapping("/users/user/update/{id}")
-    public ResponseEntity<Void> updateUser(@RequestBody UserDTO dto,
+    public ResponseEntity<Void> updateUser(@RequestBody UserDTOUpdate dto,
                                            @PathVariable("id") int id) {
         service.updateUser(dto, id);
         return ResponseEntity

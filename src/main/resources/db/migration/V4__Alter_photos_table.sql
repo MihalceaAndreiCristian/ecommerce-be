@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS ecommerce.photos DROP CONSTRAINT IF EXISTS product_id_and_main_photo_unique;

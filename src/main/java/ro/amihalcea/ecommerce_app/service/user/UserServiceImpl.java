@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.amihalcea.ecommerce_app.dto.UserDTO;
+import ro.amihalcea.ecommerce_app.dto.UserDTOUpdate;
 import ro.amihalcea.ecommerce_app.mapper.UserMapper;
 import ro.amihalcea.ecommerce_app.model.User;
 import ro.amihalcea.ecommerce_app.repository.UserRepository;
@@ -22,21 +23,18 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository repo;
-    private final PasswordEncoder passwordEncoder;
     private final UserMapper mapper;
 
     @Autowired
     public UserServiceImpl(UserRepository repo,
                            PasswordEncoder passwordEncoder) {
         this.repo = repo;
-        this.passwordEncoder = passwordEncoder;
         this.mapper = Mappers.getMapper(UserMapper.class);
 
     }
     @Override
     @Transactional
     public UserDTO registerUser(UserDTO dto) {
-        dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         var userAlreadyRegistered = repo.findByUsernameOrEmail(dto.getUsername(), dto.getEmail());
         if (userAlreadyRegistered.isEmpty()) {
             var user = mapper.mapFromDto(dto);
@@ -50,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     @Transactional
-    public void updateUser(UserDTO dto,
+    public void updateUser(UserDTOUpdate dto,
                            int id) {
         repo
                 .findById(id)
