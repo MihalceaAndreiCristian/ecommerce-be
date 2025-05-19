@@ -111,6 +111,14 @@ public class ProductServiceImpl implements ProductService {
                                                  ProductDTO productFromDb) {
         var newList = updatedProduct.getPhotos();
         var oldList = productFromDb.getPhotos();
+        if (newList == null && oldList == null) {
+            return List.of();
+        } else if (newList == null) {
+            return oldList;
+        }else if (oldList == null){
+            return newList;
+        }
+
         HashSet<PhotoDTO> existingElements = new HashSet<>(oldList);
 
         for (PhotoDTO p : newList) {

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ro.amihalcea.ecommerce_app.dto.UserDTO;
+import ro.amihalcea.ecommerce_app.model.UserPrincipal;
 import ro.amihalcea.ecommerce_app.service.user.UserService;
 
 import javax.crypto.KeyGenerator;
@@ -43,8 +44,10 @@ public class JwtServiceImpl implements JwtService {
         }
     }
 
-    public String generateToken(String username) {
+    public String generateToken(UserPrincipal userPrincipal) {
         Map<String, Object> claim = new HashMap<>();
+        String username = userPrincipal.getUsername();
+        claim.put("role",userPrincipal.getAuthorities().stream().findFirst().get().getAuthority());
 
         return Jwts.builder()
                 .setClaims(claim)

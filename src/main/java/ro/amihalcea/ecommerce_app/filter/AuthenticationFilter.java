@@ -71,7 +71,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
-        String token = jwtService.generateToken(((UserPrincipal) authResult.getPrincipal()).getUsername());
+        String token = jwtService.generateToken(((UserPrincipal) authResult.getPrincipal()));
         response.addHeader(AUTHORIZATION, token);
         response.setHeader(AUTHORIZATION, token);
         response.setHeader("Access-Control-Allow-Origin","*");
