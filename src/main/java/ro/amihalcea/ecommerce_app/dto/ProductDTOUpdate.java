@@ -1,20 +1,21 @@
 package ro.amihalcea.ecommerce_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import java.util.List;
+
+
+
+@EqualsAndHashCode(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter 
 @Setter
-@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDTOUpdate {
-    private int id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String role;
+public class ProductDTOUpdate extends ProductDTO{
 
+
+    private List<String> removePhotoByKeys;
 }

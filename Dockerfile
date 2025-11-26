@@ -8,6 +8,9 @@ FROM maven:3.9.6-eclipse-temurin-17 AS builder
 # Setează directorul de lucru
 WORKDIR /ecommerce-app
 
+#ENV SPRING_PROFILES_ACTIVE=""
+
+
 # Copiază fișierele sursă în container
 COPY . /ecommerce-app
 
@@ -15,7 +18,7 @@ COPY . /ecommerce-app
 RUN mvn clean install -DskipTests
 
 # Expune portul pe care rulează aplicația
-EXPOSE 8080
+EXPOSE 3000
 
 # Comanda de pornire a aplicației
 ENTRYPOINT ["java", "-jar", "/ecommerce-app/target/ecommerce-app-0.0.1.jar"]

@@ -1,6 +1,6 @@
 spring:
   datasource:
-    username: flywayuser
+    username: flywayUser
     password: jozey
     url: jdbc:postgresql://localhost:5432/ecommerce?currentSchema=ecommerce
 

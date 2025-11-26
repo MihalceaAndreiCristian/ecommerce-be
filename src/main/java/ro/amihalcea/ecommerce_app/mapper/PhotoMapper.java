@@ -41,7 +41,9 @@ public abstract class PhotoMapper {
         if (content == null || content.isEmpty()){
             return null;
         }
-        return Base64.getDecoder().decode(dto.getContent());
+        content = content.split(";base64,")[1];
+
+        return Base64.getDecoder().decode(content);
     }
 
     protected String encodeContent(Photo photo){
@@ -49,6 +51,7 @@ public abstract class PhotoMapper {
         if (content == null || content.length == 0){
             return null;
         }
-        return Base64.getEncoder().encodeToString(photo.getContent());
+        String contentParsed = Base64.getEncoder().encodeToString(content);
+        return String.format("data:image/%s;base64,%s",photo.getExtension(), contentParsed);
     }
 }

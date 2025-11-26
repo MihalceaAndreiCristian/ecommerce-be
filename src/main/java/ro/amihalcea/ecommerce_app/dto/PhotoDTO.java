@@ -1,13 +1,13 @@
 package ro.amihalcea.ecommerce_app.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter 
+@Setter
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PhotoDTO {
 
@@ -18,4 +18,14 @@ public class PhotoDTO {
     private Integer productId;
     private Boolean isMainPhoto;
 
+    @Override
+    public String toString() {
+        return "PhotoDTO{" +
+                "photoId='" + photoId + '\'' +
+                ", photoName='" + photoName + '\'' +
+                ", extension='" + extension + '\'' +
+                ", productId=" + productId +
+                ", isMainPhoto=" + isMainPhoto +
+                '}';
+    }
 }

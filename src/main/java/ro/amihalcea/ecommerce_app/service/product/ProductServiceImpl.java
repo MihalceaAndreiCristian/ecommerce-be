@@ -1,25 +1,25 @@
 package ro.amihalcea.ecommerce_app.service.product;
 
-import org.mapstruct.factory.Mappers;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.amihalcea.ecommerce_app.dto.PhotoDTO;
 import ro.amihalcea.ecommerce_app.dto.ProductDTO;
+import ro.amihalcea.ecommerce_app.dto.ProductDTOUpdate;
 import ro.amihalcea.ecommerce_app.exception.ProductNotFoundException;
 import ro.amihalcea.ecommerce_app.mapper.ProductMapper;
+import ro.amihalcea.ecommerce_app.model.Product;
 import ro.amihalcea.ecommerce_app.repository.ProductRepository;
 import ro.amihalcea.ecommerce_app.service.product.photo.PhotoService;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Base64;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -42,7 +42,7 @@ public class ProductServiceImpl implements ProductService {
         if (productFromDB.isPresent()) {
             return mapper.mapFromModel(productFromDB.get());
         }
-        throw new ProductNotFoundException("Product not found by id '%s", productId);
+        throw new ProductNotFoundException("Product not found by id '%s'", productId);
     }
 
     @Override
@@ -81,22 +81,36 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public ProductDTO updateProduct(ProductDTO newData,
+    public ProductDTO updateProduct(ProductDTOUpdate newData,
                                     int productId) {
-        var productFromDbDTO = getProduct(productId);
+        ProductDTO productFromDbDTO = getProduct(productId);
         productFromDbDTO.setLastUpdate(Timestamp.valueOf(LocalDateTime.now()));
         productFromDbDTO.setPrice(newData.getPrice() != null && newData.getPrice() != 0.0 ? newData.getPrice() :
                 productFromDbDTO.getPrice());
         productFromDbDTO.setName(updateStringOrDismiss(newData.getName(), productFromDbDTO.getName()));
         productFromDbDTO.setDescription(updateStringOrDismiss(newData.getDescription(), productFromDbDTO.getDescription()));
-        productFromDbDTO.setPhotos(validateProductPhotos(newData, productFromDbDTO));
 
-        var productUpdated = mapper.mapFromDTO(productFromDbDTO);
+        // todo salvat pozele si verificat cum sa le scoatem din frontend pe cele la care facem delete
+        Product productUpdated = mapper.mapFromDTO(productFromDbDTO);
         // save updated photos too
+        log.info("Saving product {}", productUpdated);
         repository.save(productUpdated);
 
+        productFromDbDTO.setPhotos(validateProductPhotos(newData));
 
         return productFromDbDTO;
+    }
+
+    @Override
+    @Transactional
+    public void deleteProduct(int productId) {
+        var productFound = repository.findById(productId).orElseThrow(() -> new ProductNotFoundException("Not found " +
+                "by id %s", productId));
+
+        photoService.deletePhotosByProduct(productFound);
+        repository.delete(productFound);
+
+        log.info("Product with id: {} deleted successfully.",productId);
     }
 
     private String updateStringOrDismiss(String newValue,
@@ -107,26 +121,26 @@ public class ProductServiceImpl implements ProductService {
         return existingValue;
     }
 
-    private List<PhotoDTO> validateProductPhotos(ProductDTO updatedProduct,
-                                                 ProductDTO productFromDb) {
-        var newList = updatedProduct.getPhotos();
-        var oldList = productFromDb.getPhotos();
-        if (newList == null && oldList == null) {
-            return List.of();
-        } else if (newList == null) {
-            return oldList;
-        }else if (oldList == null){
-            return newList;
+    @Transactional
+    private List<PhotoDTO> validateProductPhotos(ProductDTOUpdate updatedProduct) {
+        var removePhotoByKeys = updatedProduct.getRemovePhotoByKeys();
+        if (removePhotoByKeys !=null && !removePhotoByKeys.isEmpty()){
+            photoService.deletePhotosInBatch(removePhotoByKeys);
         }
 
-        HashSet<PhotoDTO> existingElements = new HashSet<>(oldList);
+        var photosToSave  = updatedProduct.getPhotos();
+        List<PhotoDTO> photosSaved = new ArrayList<>();
+        if (photosToSave!=null && !photosToSave.isEmpty()){
+            photosToSave = photosSaved.stream()
+                    .map(photo -> {
+                        photo.setProductId(updatedProduct.getId());
+                        photo.setPhotoId(UUID.randomUUID().toString());
+                        return photo;
+                    })
+                    .toList();
+            photosSaved = photoService.addPhotos(photosToSave);
+        }
 
-        for (PhotoDTO p : newList) {
-            if (!existingElements.contains(p)) {
-                oldList.add(p);
-            }
-
-       }
-        return existingElements.stream().toList();
+        return photosToSave;
     }
 }

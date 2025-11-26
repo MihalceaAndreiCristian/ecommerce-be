@@ -2,17 +2,15 @@ package ro.amihalcea.ecommerce_app.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="photos")
-@ToString
 public class Photo {
 
     @Id
@@ -30,4 +28,14 @@ public class Photo {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Override
+    public String toString() {
+        return "Photo{" +
+                "photoId='" + photoId + '\'' +
+                ", photoName='" + photoName + '\'' +
+                ", extension='" + extension + '\'' +
+                ", isMainPhoto=" + isMainPhoto +
+                ", product=" + product +
+                '}';
+    }
 }

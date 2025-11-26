@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ro.amihalcea.ecommerce_app.dto.ProductDTO;
+import ro.amihalcea.ecommerce_app.dto.ProductDTOUpdate;
 import ro.amihalcea.ecommerce_app.service.product.ProductService;
 
 import java.util.List;
@@ -38,9 +39,15 @@ public class ProductController {
 
     @PatchMapping("/product/edit/{productId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO updatedProduct,
+    public ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTOUpdate updatedProduct,
                                                     @PathVariable("productId") int productId){
         return ResponseEntity.ok(productService.updateProduct(updatedProduct,productId));
     }
 
+    @DeleteMapping("/product/{productId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteProduct(@PathVariable("productId") int productId){
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok().build();
+    }
 }

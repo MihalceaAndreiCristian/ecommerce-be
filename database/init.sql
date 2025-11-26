@@ -1,0 +1,3 @@
+CREATE USER flywayUser WITH PASSWORD 'jozey';
+CREATE DATABASE ecommerce;
+GRANT ALL PRIVILEGES ON DATABASE ecommerce TO flywayUser;
